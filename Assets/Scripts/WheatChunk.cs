@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class WheatChunk : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> cutPrefabs;
-    [SerializeField] private WheatDropView dropPrefab;
-
+    [Inject] private SpawnManager spawnManager;
+    
     private WheatEarView[] wheatEarViews;
     
     private void Start()
@@ -22,7 +22,6 @@ public class WheatChunk : MonoBehaviour
 
     private void OnWheatCut()
     {
-       
         WheatEarView view = null;
         foreach (var v in wheatEarViews)
         {
@@ -43,13 +42,11 @@ public class WheatChunk : MonoBehaviour
         view.PlayCutAnimation();
             
         //spawn cut
-        var cut = cutPrefabs[Random.Range(0, cutPrefabs.Count)];
-        var cutGameObject=Instantiate(cut, view.transform.position, Quaternion.identity, transform);
-
+        var cutGameObject=spawnManager.SpawnCut(view.transform.position);
+       
         //spawn drop
-        var dropGameObject = Instantiate(dropPrefab,  view.DropSpawnPosition.position, Quaternion.identity, transform);
-        dropGameObject.ThrowUp();
-
+        var drop=spawnManager.SpawnDrop(view.DropSpawnPosition.position);
+       
         StartCoroutine(GrowthCoroutine(view,cutGameObject));
     }
 

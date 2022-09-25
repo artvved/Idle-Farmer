@@ -86,8 +86,6 @@ public class PlayerView : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-      
-       
         var pl = other.gameObject.GetComponent<WheatChunk>();
         if (pl!=null)
         {
@@ -100,7 +98,6 @@ public class PlayerView : MonoBehaviour
         if (drop!=null)
         {
             //pick a drop
-            print("pick");
             Destroy(drop.gameObject);
         }
         
