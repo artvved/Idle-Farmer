@@ -4,6 +4,10 @@ using Random = UnityEngine.Random;
 
 public class WheatDropView : MonoBehaviour
 {
+    [SerializeField] private int value;
+
+    public int Value => value;
+
     private Rigidbody rb;
 
     private void Awake()

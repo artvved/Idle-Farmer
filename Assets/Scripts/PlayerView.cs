@@ -1,48 +1,54 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
+using UI;
 using UnityEngine;
+
+using Zenject;
 
 public class PlayerView : MonoBehaviour
 {
-    private Animator animator;
-    private Rigidbody rigidbody;
     [SerializeField] private float velocity;
-    private float slowVel;
+    [SerializeField] private int maxCapacity;
     [SerializeField] private Joystick joystick;
 
+    [Inject] private CapacityProgressBar capacityProgressBar;
+
+    private Rigidbody rb;
+    //anim
+    private Animator animator;
     private int zoneCount = 0;
     private bool isWalking = false;
-  
+
+    //model
+    private int capacity;
+    private float slowVel;
+
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         slowVel = velocity /2 ;
     }
 
    
     void FixedUpdate()
     {
-        if (zoneCount>0)
+        if (zoneCount>0)//harvesting
         {
-            rigidbody.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * slowVel;
+            rb.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * slowVel;
         }else
-            rigidbody.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * velocity;
+            rb.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * velocity;
         
         if (joystick.Direction.x != 0 || joystick.Direction.y != 0)
         {
             isWalking = true;
-            transform.rotation = Quaternion.LookRotation(rigidbody.velocity);
-            //animator.SetBool("Walk",true);
+            transform.rotation = Quaternion.LookRotation(rb.velocity);
             AnimateWalk();
         }
         else
         {
             isWalking = false;
-            //animator.SetBool("Walk",false);
-            rigidbody.angularVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
             AnimateWalk();
         }
         
@@ -97,13 +103,31 @@ public class PlayerView : MonoBehaviour
         var drop = other.gameObject.GetComponentInParent<WheatDropView>();
         if (drop!=null)
         {
+            if (capacity==maxCapacity)
+            {
+                return;
+            }
             //pick a drop
+            IncCapacity(drop.Value);
+            capacityProgressBar.ChangeValue((float)capacity/(float)maxCapacity);
             Destroy(drop.gameObject);
         }
         
+    }
+
+    private void IncCapacity(int val)
+    {
+        if (capacity+val>maxCapacity)
+        {
+            capacity = maxCapacity;
+        }
+        else
+        {
+            capacity += val;
+        }
         
     }
-    
+
 
     private void OnTriggerExit(Collider other)
     {
