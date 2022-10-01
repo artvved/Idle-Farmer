@@ -8,9 +8,10 @@ namespace UI
     {
         [SerializeField] private Image bar;
         private float fill;
-        
-        
+
         private float targetFill;
+        private float animK;
+      
         private Coroutine coroutine;
 
         private void Start()
@@ -21,18 +22,23 @@ namespace UI
 
         public void ChangeValue(float target)
         {
-            
             targetFill = target;
+            if (target==0)
+            {
+                animK  = 4f;
+            }else 
+                animK = 2f;
+           
             if (coroutine==null)
             {
-                coroutine = StartCoroutine(Fill());
+                coroutine = StartCoroutine(ChangeCoroutine());
             }
            
         }
 
-        private IEnumerator Fill()
+        private IEnumerator ChangeCoroutine()
         {
-            for (float i = 0; i < 1; i+=Time.deltaTime)
+            for (float i = 0; i < 1; i+=Time.deltaTime/animK )
             {
                 fill=Mathf.Lerp(fill,targetFill,i);
                 bar.fillAmount = fill;

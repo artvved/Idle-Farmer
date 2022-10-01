@@ -9,10 +9,12 @@ public class WheatDropView : MonoBehaviour
     public int Value => value;
 
     private Rigidbody rb;
+    private Collider col;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        col = GetComponent<Collider>();
     }
 
     
@@ -25,5 +27,15 @@ public class WheatDropView : MonoBehaviour
             Random.Range(-100f, 100f)
         ));
         //rb.AddTorque(new Vector3(0,Random.Range(-50f,50f),0));
+    }
+
+    public void TurnCollider(bool turn)
+    {
+        col.enabled = turn;
+    }
+    
+    public void TurnTrigger(bool turn)
+    {
+        col.isTrigger = turn;
     }
 }

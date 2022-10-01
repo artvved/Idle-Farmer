@@ -8,8 +8,10 @@ public class PlayerView : MonoBehaviour
 {
     [SerializeField] private float velocity;
     [SerializeField] private int maxCapacity;
+    [SerializeField] private StacksView stacksView;
+    
+    //UI
     [SerializeField] private Joystick joystick;
-
     [Inject] private CapacityProgressBar capacityProgressBar;
 
     private Rigidbody rb;
@@ -21,13 +23,16 @@ public class PlayerView : MonoBehaviour
     //model
     private int capacity;
     private float slowVel;
-
+    private float stacksVisualInc;
+    private float stacksCurVisualRate;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        slowVel = velocity /2 ;
+        slowVel = velocity *3/4;
+
+        stacksVisualInc= stacksView.Limit / (float)maxCapacity;
     }
 
    
@@ -108,14 +113,35 @@ public class PlayerView : MonoBehaviour
                 return;
             }
             //pick a drop
-            IncCapacity(drop.Value);
+            ChangeCapacity(drop.Value);
             capacityProgressBar.ChangeValue((float)capacity/(float)maxCapacity);
+
+            var nextVisRate = stacksCurVisualRate + stacksVisualInc;
+            if (Mathf.Floor(nextVisRate)>Mathf.Floor(stacksCurVisualRate))
+            {
+                stacksView.AddToStack();
+            }
             Destroy(drop.gameObject);
+            
+
+            stacksCurVisualRate += stacksVisualInc;
+
+
+            return;
         }
         
+        var sell = other.gameObject.GetComponentInParent<SellZone>();
+        if (sell != null)
+        {
+            capacity = 0;
+            capacityProgressBar.ChangeValue(0f);
+            stacksCurVisualRate = 0;
+
+            return;
+        }
     }
 
-    private void IncCapacity(int val)
+    private void ChangeCapacity(int val)
     {
         if (capacity+val>maxCapacity)
         {
