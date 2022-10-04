@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using DG.Tweening;
 using UI;
 using UnityEngine;
 
@@ -21,18 +22,17 @@ public class WheatReceiver : MonoBehaviour
             {
                 Destroy(other.gameObject);
 
-                StartCoroutine(WaitForSec());
-                var c = Instantiate(coinPrefab, transform);
-                
-                
-                c.FlyToTarget(target);
+                StartCoroutine(WaitForSecAndInstantiate());
+              
             }
         }
     }
 
 
-    private IEnumerator WaitForSec()
+    private IEnumerator WaitForSecAndInstantiate()
     {
         yield return new WaitForSeconds(0.5f);
+        var c = Instantiate(coinPrefab, transform);
+        c.FlyToTarget(target);
     }
 }

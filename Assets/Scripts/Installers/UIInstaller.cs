@@ -2,18 +2,26 @@
 using UnityEngine;
 using Zenject;
 
-
-public class UIInstaller : MonoInstaller
+namespace Installers
 {
-    
-    [SerializeField] private CapacityProgressBar capacityProgressBar;
-    
-    public override void InstallBindings()
+    public class UIInstaller : MonoInstaller
     {
+    
+        [SerializeField] private CapacityProgressBar capacityProgressBar;
+        [SerializeField] private CoinsCounter coinsCounter;
+    
+        public override void InstallBindings()
+        {
         
-        Container.Bind<CapacityProgressBar>()
-            .FromInstance(capacityProgressBar)
-            .AsSingle()
-            .NonLazy();
+            Container.Bind<CapacityProgressBar>()
+                .FromInstance(capacityProgressBar)
+                .AsSingle()
+                .NonLazy();
+            
+            Container.Bind<CoinsCounter>()
+                .FromInstance(coinsCounter)
+                .AsSingle()
+                .NonLazy();
+        }
     }
 }

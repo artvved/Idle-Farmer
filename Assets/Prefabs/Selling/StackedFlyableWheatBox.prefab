@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
+  flyTimeK: 1
 --- !u!65 &5397607072831606852
 BoxCollider:
   m_ObjectHideFlags: 0

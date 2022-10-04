@@ -24,7 +24,13 @@ public class StacksView : MonoBehaviour
     private void Start()
     {
         h = (maxSize / startPositions.Length);
-        maxSize = h*startPositions.Length; //limiting maxSize to correct int to fit visually
+        if (h == 0)
+        {
+            h = 1;
+        }
+        else
+            maxSize = h * startPositions.Length; //limiting maxSize to correct int to fit visually
+
         InitStacks();
     }
 
@@ -39,7 +45,6 @@ public class StacksView : MonoBehaviour
         i = 0;
         j = 0;
         curSize = 0;
-      
     }
 
     public void MoveStacksToTarget(Transform target)
@@ -49,7 +54,6 @@ public class StacksView : MonoBehaviour
 
     private IEnumerator MoveStacksWithDelay(Transform target)
     {
-
         for (int k = flyingWheatStacksViews.Count - 1; k >= 0; k--)
         {
             for (int k1 = flyingWheatStacksViews[k].Count - 1; k1 >= 0; k1--)
@@ -58,6 +62,7 @@ public class StacksView : MonoBehaviour
                 flyingWheatStacksViews[k][k1].FlyToTarget(target);
             }
         }
+
         InitStacks();
     }
 
@@ -65,6 +70,7 @@ public class StacksView : MonoBehaviour
     {
         if (i == h)
         {
+            print(curSize);
             return;
         }
 
@@ -84,7 +90,7 @@ public class StacksView : MonoBehaviour
 
 
         //increment
-       
+
         curSize++;
         if (++j == startPositions.Length)
         {

@@ -61,8 +61,6 @@ namespace UI
         private void MoveReceiver(Vector3 pos)
         {
             var tr = coinsReceiver.transform;
-            var y = tr.position.y;
-            pos.y = y;
             tr.position = pos;
         }
 

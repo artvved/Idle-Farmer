@@ -15,7 +15,7 @@ public class PlayerView : MonoBehaviour
     //UI
     [SerializeField] private Joystick joystick;
     [Inject] private CapacityProgressBar capacityProgressBar;
-    [SerializeField] private CoinsCounter coinsCounter;
+    [Inject] private CoinsCounter coinsCounter;
 
     private Rigidbody rb;
     //anim
@@ -126,7 +126,8 @@ public class PlayerView : MonoBehaviour
 
 
             var nextVisRate = stacksCurVisualRate + stacksVisualInc;
-            if (Mathf.Floor(nextVisRate)>Mathf.Floor(stacksCurVisualRate))//can show next stack
+            if (Mathf.Floor(nextVisRate)>Mathf.Floor(stacksCurVisualRate) 
+                || capacity==maxCapacity)//can show next stack
             {
                 stacksView.AddToStack();
             }
