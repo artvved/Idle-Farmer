@@ -6,13 +6,16 @@ using Zenject;
 
 public class PlayerView : MonoBehaviour
 {
-    [SerializeField] private float velocity;
+    [SerializeField] private float maxVelocity;
     [SerializeField] private int maxCapacity;
+    [Range( 0,  100)]
+    [SerializeField] private float speedDecreaseByStack; //percent to decrease speed when picking drop
     [SerializeField] private StacksView stacksView;
     
     //UI
     [SerializeField] private Joystick joystick;
     [Inject] private CapacityProgressBar capacityProgressBar;
+    [SerializeField] private CoinsCounter coinsCounter;
 
     private Rigidbody rb;
     //anim
@@ -21,28 +24,31 @@ public class PlayerView : MonoBehaviour
     private bool isWalking = false;
 
     //model
+    [Header("Selling")]
+    [SerializeField] private float capacityToMoneyK;
+
+    private int coinsCount;
+    //stacks
     private int capacity;
-    private float slowVel;
     private float stacksVisualInc;
     private float stacksCurVisualRate;
+    //move
+    private float curVel;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
-        slowVel = velocity *3/4;
-
-        stacksVisualInc= stacksView.Limit / (float)maxCapacity;
+        curVel = maxVelocity;
+        speedDecreaseByStack /= 100;
+        stacksVisualInc= stacksView.MaxSize / (float)maxCapacity;
+        coinsCount = PlayerPrefs.GetInt("Coins");
     }
 
    
     void FixedUpdate()
     {
-        if (zoneCount>0)//harvesting
-        {
-            rb.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * slowVel;
-        }else
-            rb.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * velocity;
+        rb.velocity = new Vector3(joystick.Direction.x, 0, joystick.Direction.y) * Time.deltaTime * curVel;
         
         if (joystick.Direction.x != 0 || joystick.Direction.y != 0)
         {
@@ -75,6 +81,7 @@ public class PlayerView : MonoBehaviour
         }
         else
         {
+            animator.speed = curVel / (float) maxVelocity;
             animator.SetBool("Walk",true);
             animator.SetBool("WalkAttack",false);
         }
@@ -106,26 +113,26 @@ public class PlayerView : MonoBehaviour
             return;
         }
         var drop = other.gameObject.GetComponentInParent<WheatDropView>();
-        if (drop!=null)
+        if (drop!=null)//pick a drop
         {
             if (capacity==maxCapacity)
             {
                 return;
             }
-            //pick a drop
+            
             ChangeCapacity(drop.Value);
+            DecreaseSpeed();
             capacityProgressBar.ChangeValue((float)capacity/(float)maxCapacity);
 
+
             var nextVisRate = stacksCurVisualRate + stacksVisualInc;
-            if (Mathf.Floor(nextVisRate)>Mathf.Floor(stacksCurVisualRate))
+            if (Mathf.Floor(nextVisRate)>Mathf.Floor(stacksCurVisualRate))//can show next stack
             {
                 stacksView.AddToStack();
             }
-            Destroy(drop.gameObject);
-            
-
             stacksCurVisualRate += stacksVisualInc;
-
+            
+            Destroy(drop.gameObject);
 
             return;
         }
@@ -133,13 +140,28 @@ public class PlayerView : MonoBehaviour
         var sell = other.gameObject.GetComponentInParent<SellZone>();
         if (sell != null)
         {
+          
+            PlayerPrefs.SetInt("Coins",coinsCount);
+            coinsCount += (int) (capacity * capacityToMoneyK); //new coins count
+            coinsCounter.SetVisualCoinValue((capacity * capacityToMoneyK)/stacksView.CurSize);  //value of one visual coin/stack
+            
+            stacksView.MoveStacksToTarget(sell.WheatReceiver.transform);
+            coinsCounter.EnableReceiver();
+            
             capacity = 0;
             capacityProgressBar.ChangeValue(0f);
             stacksCurVisualRate = 0;
+            curVel = maxVelocity;
 
             return;
         }
     }
+
+    private void DecreaseSpeed()
+    {
+        curVel -= curVel * speedDecreaseByStack;
+    }
+    
 
     private void ChangeCapacity(int val)
     {

@@ -26,7 +26,6 @@ public class WheatDropView : MonoBehaviour
             Random.Range(4f, 6f) * k,
             Random.Range(-100f, 100f)
         ));
-        //rb.AddTorque(new Vector3(0,Random.Range(-50f,50f),0));
     }
 
     public void TurnCollider(bool turn)

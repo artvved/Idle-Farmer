@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿
+    using UnityEngine;
 
+    public class SellZone : MonoBehaviour
+    {
+        [SerializeField] private WheatReceiver wheatReceiver;
 
-public class SellZone : MonoBehaviour
-{
-    
-}
+        public WheatReceiver WheatReceiver => wheatReceiver;
+    }
