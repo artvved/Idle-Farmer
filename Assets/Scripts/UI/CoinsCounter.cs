@@ -53,7 +53,7 @@ namespace UI
 
         private IEnumerator WaitForDisable()
         {
-            yield return new WaitForSeconds(4f);
+            yield return new WaitForSeconds(10f);
             isEnabledToMove = false;
             coinsReceiver.gameObject.SetActive(false);
         }
