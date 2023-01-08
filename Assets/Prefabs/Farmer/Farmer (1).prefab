@@ -13,6 +13,9 @@ GameObject:
   - component: {fileID: 2920345218026524351}
   - component: {fileID: 2920345218026524348}
   - component: {fileID: 2920345218026524349}
+  - component: {fileID: 5115962976314864494}
+  - component: {fileID: 4100395183343650169}
+  - component: {fileID: 7211048853032317798}
   m_Layer: 6
   m_Name: Farmer (1)
   m_TagString: Untagged
@@ -45,13 +48,13 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2920345218026524338}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 4
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &2920345218026524351
 CapsuleCollider:
@@ -99,11 +102,49 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4e8a3ca1eb1ce040917230be568bf1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 150
+  maxVelocity: 4
   maxCapacity: 40
   speedDecreaseByStack: 1
   stacksView: {fileID: 5603724422222078290}
+  menuScreen: {fileID: 0}
+  capacityToMoneyK: 10
+--- !u!114 &5115962976314864494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920345218026524338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61fda590a4e646e3a7c5024fcca5c35a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   joystick: {fileID: 0}
+--- !u!114 &4100395183343650169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920345218026524338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3088a475444c41a04cf2f64565ed6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7211048853032317798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2920345218026524338}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3b73deb6b34bde8868faf0c22e8836, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2920345218646330203
 GameObject:
   m_ObjectHideFlags: 0
